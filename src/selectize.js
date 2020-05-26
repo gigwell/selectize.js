@@ -136,7 +136,7 @@ $.extend(Selectize.prototype, {
 		$control          = $('<div>').addClass(settings.inputClass).addClass('items').appendTo($wrapper);
 		$control_input    = $('<input type="text" autocomplete="off" />').appendTo($control).attr('tabindex', $input.is(':disabled') ? '-1' : self.tabIndex);
 		$dropdown_parent  = $(settings.dropdownParent || $wrapper);
-		$dropdown         = $('<div>').addClass(settings.dropdownClass).addClass(inputMode).hide();
+		$dropdown         = $('<div>').addClass(settings.dropdownClass).addClass(inputMode).hide().appendTo($dropdown_parent);
 		$dropdown_content = $('<div>').addClass(settings.dropdownContentClass).appendTo($dropdown);
 
 		if(inputId = $input.attr('id')) {
@@ -186,7 +186,6 @@ $.extend(Selectize.prototype, {
 		self.$control_input    = $control_input;
 		self.$dropdown         = $dropdown;
 		self.$dropdown_content = $dropdown_content;
-    self.$dropdown_parent  = $dropdown_parent;
 
 		$dropdown.on('mouseenter mousedown click', '[data-disabled]>[data-selectable]', function(e) { e.stopImmediatePropagation(); });
 		$dropdown.on('mouseenter', '[data-selectable]', function() { return self.onOptionHover.apply(self, arguments); });
@@ -1175,10 +1174,10 @@ $.extend(Selectize.prototype, {
 			} else {
 				$active = $create;
 			}
-			self.setActiveOption($active, self.isOpen);
+			self.setActiveOption($active);
 			if (triggerDropdown && !self.isOpen) { self.open(); }
 		} else {
-			self.setActiveOption(null, false);
+			self.setActiveOption(null);
 			if (triggerDropdown && self.isOpen) { self.close(); }
 		}
 	},
@@ -1765,11 +1764,6 @@ $.extend(Selectize.prototype, {
 		var self = this;
 
 		if (self.isLocked || self.isOpen || (self.settings.mode === 'multi' && self.isFull())) return;
-
-		if(!document.body.contains(this.$dropdown[0])){
-		  this.$dropdown_parent.append(this.$dropdown)
-    }
-
 		self.focus();
 		self.isOpen = true;
 		self.refreshState();
