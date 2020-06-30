@@ -1943,6 +1943,8 @@
 		addItems: function(values, silent) {
 			this.buffer = document.createDocumentFragment();
 	
+			var isFocused = this.isFocused;
+	
 			var childNodes = this.$control[0].childNodes;
 			for (var i = 0; i < childNodes.length; i++) {
 				this.buffer.appendChild(childNodes[i]);
@@ -1956,6 +1958,11 @@
 	
 			var control = this.$control[0];
 			control.insertBefore(this.buffer, control.firstChild);
+	
+			//this.buffer.appendChild blurs the input, we have to focus it again
+			if(isFocused && !this.isFocused){
+				this.focus();
+			}
 	
 			this.buffer = null;
 		},
